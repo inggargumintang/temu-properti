@@ -1,0 +1,54 @@
+{
+  "summary": "First-finish smoke test of SPEEDHOME Market Intelligence backend + frontend. Auth, areas, analyze (EN+ID), ROI, compare, saved, register, logout all work. Critical bug: Export XLSX & CSV return 500 due to NameError in analytics.py compute_by_unit_type. Frontend dashboard renders fully with KPIs/AI/rule insights/charts. Login prefilled + sidebar nav + lang switcher OK.",
+  "tested_scope": ["backend", "frontend", "auth", "integration"],
+  "passed": [
+    "GET /api/ -> 200 service info",
+    "POST /api/auth/login (admin) -> 200, sets httpOnly access_token + refresh_token cookies",
+    "GET /api/auth/me with cookie -> 200; without cookie -> 401",
+    "POST /api/auth/logout -> 200 and Set-Cookie expires both tokens",
+    "POST /api/auth/register new user -> 200; duplicate email -> 400",
+    "GET /api/areas/autocomplete?q=Mont -> 4 suggestions incl. Mont Kiara + variants",
+    "GET /api/areas/all -> 23+ sorted areas",
+    "GET /api/analyze?area=Mont Kiara&lang=en -> 200, 40 listings, 6 rule_insights, 7 ai_insights (Claude), full overall stats, by_unit_type(5), furnishing, histogram, psf, data_source=mock",
+    "GET /api/analyze?area=Mont Kiara&lang=id -> 200, ai_insights in Bahasa Indonesia",
+    "GET /api/analyze?area=&lang=en -> 400 'Area is required'",
+    "GET /api/analyze second call -> from_cache=true",
+    "POST /api/roi -> 200 with gross_yield=4.72, net_yield=3.98, payback=25.2 (math correct)",
+    "POST /api/compare with 3 areas -> 200 comparison array len=3",
+    "POST /api/compare with 1 area -> 400; with 6 areas -> 400",
+    "POST /api/saved (body {area, payload}) -> 200; GET /api/saved -> items list with overall stats; DELETE works",
+    "GET /api/export/history/list -> 200",
+    "Frontend /login: split-screen, admin creds prefilled (admin@speedhome.com), submit -> dashboard /",
+    "Frontend Dashboard: search 'Mont Kiara' renders all 6 KPI cards, AI insights card, rule insights card, Save/CSV/XLSX buttons",
+    "Sidebar nav links present: dashboard, saved, compare, roi, exports, settings",
+    "Language switcher and logout button visible"
+  ],
+  "failed": [
+    {
+      "area": "backend/export",
+      "issue": "GET /api/export/xlsx and /api/export/csv both return HTTP 500. Root cause: /app/backend/analytics.py line 60 -> groups.setdefault(key, []).append(l)  — variable 'l' is undefined; should be 'li' (loop var on line 58).",
+      "evidence": "Backend log: NameError: name 'l' is not defined in compute_by_unit_type. Confirmed via curl (CSV size=21 'Internal Server Error') and via frontend export button click (network response status=500).",
+      "priority": "HIGH"
+    },
+    {
+      "area": "backend/analyze",
+      "issue": "GET /api/analyze?area=Nonexistent returns HTTP 500 instead of 400 for unknown area.",
+      "evidence": "curl -> HTTP=500 'Internal Server Error' for area=Nonexistent; spec expects 400 for invalid area.",
+      "priority": "MEDIUM"
+    },
+    {
+      "area": "frontend/roi",
+      "issue": "ROI page did not render result element [data-testid=\"roi-gross-yield\"] within 8s after Calculate click during automated run. Testids exist in source — likely timing or button selector mismatch. Backend /api/roi endpoint itself returns correct results. Needs quick manual verification.",
+      "evidence": "Playwright timeout waiting for roi-gross-yield after clicking roi-calculate-button.",
+      "priority": "LOW"
+    }
+  ],
+  "action_items": [
+    "FIX /app/backend/analytics.py line 60: change `.append(l)` to `.append(li)` — unblocks XLSX/CSV exports.",
+    "In /app/backend/server.py analyze endpoint, validate area against known list and return HTTPException(400) instead of letting it 500.",
+    "Verify ROI page result rendering manually (open /roi, submit form, confirm gross/net/payback/annual-income display)."
+  ],
+  "success_rate": {"backend": "85%", "frontend": "90%"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}

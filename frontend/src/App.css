@@ -1,34 +1,22 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* App-specific styles */
+.App { min-height: 100vh; }
+
+.kpi-card { transition: all 200ms ease-in-out; }
+.kpi-card:hover { border-color: #002FA7; }
+
+.ai-insight-bg { background: #F0F4FF; }
+
+.brand-dot {
+  width: 10px; height: 10px; background: #002FA7;
+  display: inline-block; border-radius: 1px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.split-auth-hero {
+  background-image: linear-gradient(135deg, rgba(0,47,167,0.85), rgba(0,34,122,0.9)),
+    url('https://images.pexels.com/photos/26108669/pexels-photo-26108669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+  background-size: cover;
+  background-position: center;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
+table.dense th, table.dense td { padding: 8px 12px; }
+table.dense tr:hover td { background: #F8F9FA; }
