@@ -1,0 +1,22 @@
+{
+  "summary": "Branding polish verified: title, favicon, SVG brand mark, new admin email (admin@temuproperti.com) all working. Old admin@speedhome.com correctly rejected. No SPEEDHOME remnants on login/dashboard UI. All sidebar-related authed endpoints return 200.",
+  "tested_scope": ["frontend", "backend", "auth", "integration"],
+  "passed": [
+    "Browser tab title = 'Temu Properti — Market Intelligence'",
+    "favicon.svg served at /favicon.svg with content-type image/svg+xml (HTTP 200)",
+    "Login page renders SVG brand-mark + 'TEMU PROPERTI' text (no SPEEDHOME text)",
+    "Login email input prefills with admin@temuproperti.com",
+    "POST /api/auth/login with admin@temuproperti.com/Admin@12345 -> 200 (role: admin)",
+    "POST /api/auth/login with old admin@speedhome.com -> 401 (correctly invalidated)",
+    "GET /api/auth/me returns admin@temuproperti.com",
+    "UI login flow succeeds; dashboard loads with sidebar showing TEMU PROPERTI brand + logo mark + 'admin@temuproperti.com' in user section",
+    "All sidebar nav links visible: Dashboard, Search, Saved Analysis, Compare Areas, ROI Calculator, Export History, Settings",
+    "Authed endpoints OK with new admin cookie: /api/saved, /api/search/history, /api/export/history/list, /api/areas/all (all HTTP 200)"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Test script's wait_for_url('**/dashboard**') was a false alarm — login redirects to '/' (Dashboard route is the root), not '/dashboard'. Verified via screenshot that login actually succeeded and dashboard rendered correctly. Register page not directly tested via UI but Register link is visible on login page; backend register endpoint already validated in prior iterations."
+}

@@ -36,7 +36,13 @@ export default function Register() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-10 bg-white">
         <div className="w-full max-w-sm">
           <div className="flex items-center gap-2 mb-10">
-            <span className="brand-dot" />
+            <span className="brand-mark">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M7 11 L16 6 L25 11 V23 H7 V11 Z" fill="#FFFFFF"/>
+                <rect x="11" y="16" width="4" height="7" fill="#002FA7"/>
+                <rect x="17" y="14" width="5" height="4" fill="#002FA7"/>
+              </svg>
+            </span>
             <span className="font-bold tracking-tight text-[15px]" style={{fontFamily:'Manrope'}}>TEMU PROPERTI</span>
             <span className="text-[11px] text-slate-500 ml-1 tracking-wide uppercase font-semibold">Market Intelligence</span>
           </div>

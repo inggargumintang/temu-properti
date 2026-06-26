@@ -30,7 +30,13 @@ export const Sidebar = () => {
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col min-h-screen sticky top-0" data-testid="sidebar">
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-2">
-          <span className="brand-dot" />
+          <span className="brand-mark">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M7 11 L16 6 L25 11 V23 H7 V11 Z" fill="#FFFFFF"/>
+              <rect x="11" y="16" width="4" height="7" fill="#002FA7"/>
+              <rect x="17" y="14" width="5" height="4" fill="#002FA7"/>
+            </svg>
+          </span>
           <span className="font-bold tracking-tight text-[15px] text-slate-900" style={{fontFamily: 'Manrope'}}>TEMU PROPERTI</span>
         </div>
         <div className="text-[11px] text-slate-500 mt-1 tracking-wide uppercase font-semibold">Market Intelligence</div>

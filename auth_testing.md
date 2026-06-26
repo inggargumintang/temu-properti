@@ -1,7 +1,7 @@
 # Auth Testing Playbook
 
 ## Admin Credentials
-- email: `admin@speedhome.com`
+- email: `admin@temuproperti.com`
 - password: `Admin@12345`
 
 ## Cookie-based JWT auth

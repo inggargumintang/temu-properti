@@ -101,7 +101,7 @@ async def clear_attempts(db, identifier: str):
 
 
 async def seed_admin(db):
-    admin_email = os.environ.get("ADMIN_EMAIL", "admin@speedhome.com")
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@temuproperti.com")
     admin_password = os.environ.get("ADMIN_PASSWORD", "Admin@12345")
     existing = await db.users.find_one({"email": admin_email})
     if existing is None:
