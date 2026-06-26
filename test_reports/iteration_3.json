@@ -1,0 +1,21 @@
+{
+  "summary": "Comprehensive playwright test of all 9 phases of the JWT cookie auth flow on SPEEDHOME Market Intelligence. ZERO 401/4xx/5xx errors observed across every page after login, and zero /auth/me 401 on fresh /login (localStorage gate works). All critical flows pass: login, navigation, analyze, save, export, reload, logout.",
+  "tested_scope": ["frontend", "auth", "integration"],
+  "passed": [
+    "Phase 1 — Fresh /login (cookies cleared): 0 /api/* requests fired; NO /auth/me 401 (localStorage hint gating confirmed working)",
+    "Phase 2 — Login admin@speedhome.com: POST /api/auth/login returns 200; Set-Cookie: access_token & refresh_token both Secure=true, HttpOnly=true, SameSite=Lax",
+    "Phase 3 — All 7 sidebar pages navigated (dashboard, search, saved, compare, roi, exports, settings): 0 bad requests (no 4xx/5xx) on any page",
+    "Phase 4 — Search 'Mont Kiara' on Dashboard: GET /api/analyze?area=Mont+Kiara&lang=en returns 200 (takes ~10s for AI-powered analysis)",
+    "Phase 5 — Save Analysis: POST /api/saved returns 200; 'Saved' toast appears",
+    "Phase 6 — Export XLSX: download succeeds with filename SPEEDHOME_Mont_Kiara_20260626.xlsx",
+    "Phase 7 — Reload (F5) while logged in: 0 bad requests; session persists; remained on dashboard",
+    "Phase 8 — Logout: POST /api/auth/logout returns 200; access_token & refresh_token cookies cleared; redirected to /login",
+    "Phase 9 — Post-logout /login: 0 /auth/me 401; login page renders cleanly"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "User-reported '401 errors' could NOT be reproduced. Both auth fixes (localStorage 'speedhome_auth_hint' gate + axios 401 interceptor) are working. Note: /api/analyze is slow (~9-10 seconds) — may have caused previous false-positive impressions if test waited <10s. Cookies confirmed Secure+HttpOnly+SameSite=Lax as per spec."
+}
