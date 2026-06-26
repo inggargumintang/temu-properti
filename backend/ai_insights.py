@@ -1,33 +1,62 @@
-"""AI-powered market insights using Emergent LLM Key (Claude Sonnet 4.5)."""
 import os
 import json
 import logging
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+from openai import AsyncOpenAI
 
 logger = logging.getLogger(__name__)
 
+api_key = os.getenv("OPENAI_API_KEY")
 
-async def generate_ai_insights(area: str, overall: dict, by_type: list, furnishing: list, lang: str = "en") -> list:
-    """Generate 5-7 AI-powered insights as a list of strings. Bilingual (en/id)."""
-    api_key = os.environ.get("EMERGENT_LLM_KEY")
-    if not api_key:
+client = AsyncOpenAI(api_key=api_key) if api_key else None
+
+
+async def generate_ai_insights(
+    area: str,
+    overall: dict,
+    by_type: list,
+    furnishing: list,
+    lang: str = "en",
+) -> list:
+    
+    if client is None:
+        return []
+
+    if not os.getenv("OPENAI_API_KEY"):
         return []
 
     lang_instruction = (
-        "Respond in Bahasa Indonesia." if lang == "id"
+        "Respond in Bahasa Indonesia."
+        if lang == "id"
         else "Respond in English."
     )
 
-    system = (
-        "You are a Malaysian rental property market analyst. "
-        "Given aggregated rental statistics, produce 5-7 crisp, actionable, data-driven insights. "
-        "Each insight must be a single sentence, specific, and reference real numbers from the data. "
-        "Avoid generic statements. Focus on investment value, pricing, and market dynamics. "
-        f"{lang_instruction} "
-        "Return ONLY a JSON array of strings, no other text. Example: [\"insight 1\", \"insight 2\"]."
-    )
+    system = f"""
+You are a Malaysian rental property market analyst.
 
-    user_payload = {
+Given aggregated rental statistics, produce 5-7 crisp, actionable,
+data-driven insights.
+
+Rules:
+- Each insight must be one sentence.
+- Mention actual numbers from the data.
+- Avoid generic advice.
+- Focus on rental pricing, investment opportunity,
+market trends and demand.
+
+{lang_instruction}
+
+Return ONLY a JSON array.
+
+Example:
+
+[
+  "Average rent is RM2500...",
+  "Studios command..."
+]
+"""
+
+    payload = {
         "area": area,
         "overall": overall,
         "by_unit_type": by_type,
@@ -35,30 +64,36 @@ async def generate_ai_insights(area: str, overall: dict, by_type: list, furnishi
     }
 
     try:
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=f"insights-{area}",
-            system_message=system,
-        ).with_model("anthropic", "claude-sonnet-4-5-20250929")
 
-        msg = UserMessage(text=f"Analyze this data and return JSON array of insights:\n{json.dumps(user_payload, indent=2)}")
-        response = await chat.send_message(msg)
+        response = await client.chat.completions.create(
+            model="gpt-4.1",
+            temperature=0.4,
+            response_format={"type": "json_object"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": system,
+                },
+                {
+                    "role": "user",
+                    "content": json.dumps(payload, indent=2),
+                },
+            ],
+        )
 
-        # Strip markdown code fences if present
-        text = response.strip()
-        if text.startswith("```"):
-            text = text.split("```")[1] if "```" in text[3:] else text
-            if text.startswith("json"):
-                text = text[4:]
-            text = text.strip("` \n")
-        # Find JSON array
-        start = text.find("[")
-        end = text.rfind("]")
-        if start >= 0 and end > start:
-            arr = json.loads(text[start:end + 1])
-            if isinstance(arr, list):
-                return [str(x) for x in arr][:7]
+        content = response.choices[0].message.content
+
+        data = json.loads(content)
+
+        if isinstance(data, dict):
+            if "insights" in data:
+                return data["insights"][:7]
+
+        if isinstance(data, list):
+            return data[:7]
+
         return []
+
     except Exception as e:
-        logger.warning(f"AI insights failed: {e}")
+        logger.exception(e)
         return []
