@@ -1,0 +1,97 @@
+{
+  "theme": "LIGHT",
+  "archetype": "4 (Swiss & High-Contrast)",
+  "vibe": "Authoritative, clear, function-first, data-dense without cognitive overload",
+  "typography": {
+    "heading_font": "Manrope",
+    "body_font": "IBM Plex Sans",
+    "rules": {
+      "h1": "text-3xl sm:text-4xl tracking-tight font-bold text-slate-900",
+      "h2": "text-xl sm:text-2xl tracking-tight font-semibold text-slate-900",
+      "h3": "text-lg sm:text-xl tracking-tight font-semibold text-slate-900",
+      "body": "text-sm text-slate-700 leading-relaxed",
+      "data_labels": "text-xs tracking-[0.05em] uppercase text-slate-500 font-bold",
+      "data_values": "text-2xl sm:text-3xl font-extrabold tracking-tighter text-slate-900"
+    }
+  },
+  "colors": {
+    "primary": {
+      "DEFAULT": "#002FA7",
+      "hover": "#00227A",
+      "foreground": "#FFFFFF"
+    },
+    "background": {
+      "app": "#F8F9FA",
+      "card": "#FFFFFF",
+      "sidebar": "#FFFFFF",
+      "ai_insight": "#F0F4FF"
+    },
+    "text": {
+      "primary": "#0A0A0A",
+      "secondary": "#52525B",
+      "muted": "#A1A1AA"
+    },
+    "status": {
+      "success": "#059669",
+      "warning": "#D97706",
+      "danger": "#DC2626",
+      "info": "#2563EB"
+    },
+    "borders": {
+      "DEFAULT": "#E4E4E7",
+      "focus": "#002FA7",
+      "card": "#E4E4E7"
+    },
+    "charts": {
+      "bar_primary": "#002FA7",
+      "histogram": "#4F46E5",
+      "pie": ["#002FA7", "#3B82F6", "#93C5FD", "#E0E7FF"]
+    }
+  },
+  "spacing_and_layout": {
+    "grid_mode": "Control Room Grid",
+    "container_padding": "p-6 sm:p-8",
+    "widget_gap": "gap-4 sm:gap-6",
+    "radius": "rounded-sm",
+    "shadows": {
+      "card": "shadow-none",
+      "dropdown": "shadow-lg shadow-slate-200/50"
+    }
+  },
+  "components": {
+    "cards": "Flat background, 1px solid border-slate-200, no shadow. Content tightly padded (p-5).",
+    "buttons": "Square or rounded-sm. Primary CTA uses deep blue (#002FA7). High contrast text. No gradients.",
+    "tables": "Dense rows. IBM Plex Sans for tabular numbers (tabular-nums). Subtle bg-slate-50 hover state for rows. Sticky header with clear sorting icons.",
+    "charts": "Recharts or Shadcn Charts. No gradients in bars/lines - solid colors only. Minimal grid lines (dashed, low opacity).",
+    "sidebar": "Fixed left, solid white background, 1px solid right border (border-slate-200). Menu items have slight bg tint on hover.",
+    "inputs": "1px solid border, rounded-sm, pure white background. Focus ring must be crisp: focus-visible:ring-2 focus-visible:ring-primary/20."
+  },
+  "motion": {
+    "hover": "transition-all duration-200 ease-in-out",
+    "click": "active:scale-[0.98]",
+    "page_transition": "animate-in fade-in duration-300"
+  },
+  "icons_library": "@phosphor-icons/react",
+  "media": {
+    "auth_background": "https://images.pexels.com/photos/26108669/pexels-photo-26108669.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "roi_calculator_banner": "https://images.unsplash.com/photo-1603072845032-7b5bd641a82a",
+    "empty_state_illustration": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab"
+  },
+  "accessibility": {
+    "contrast": "Strict APCA/WCAG AA adherence. Text must have >4.5:1 ratio against background.",
+    "focus": "All interactive elements must have visible focus rings.",
+    "data_testid_convention": "kebab-case, role-based. e.g., 'search-input', 'export-csv-button', 'roi-calculate-button'."
+  },
+  "instructions_to_main_agent": [
+    "Install @phosphor-icons/react and use it for all icons (Dashboard, Search, Compare, ROI, Export, Settings).",
+    "Install and use 'Manrope' for headings and 'IBM Plex Sans' for body and data tabular content.",
+    "Use Shadcn UI primitives but override their default border-radius from 'rounded-md' to 'rounded-sm' for a sharper, more technical Swiss look.",
+    "Implement the Dashboard KPIs following a 'Control Room' grid layout: large typography for metrics, small high-contrast directional indicators (e.g., red/green carets).",
+    "Ensure 'AI Insights' cards have a distinctive but subtle background tint (bg-[#F0F4FF]) to differentiate them from raw data cards. Use a spark icon.",
+    "For the Area Comparison feature, utilize a responsive grid that allows side-by-side comparison (up to 5 columns), with horizontal scroll on small viewports.",
+    "Language Switcher (ID/EN) should be accessible from the sidebar footer or top header.",
+    "All charts (Histogram, Bar, Pie) must strictly avoid default generic colors; map them to the palette defined in `colors.charts`.",
+    "Add `data-testid` attributes to all buttons, inputs, navigation links, and chart containers for end-to-end testing.",
+    "For Auth pages (Login/Register), utilize a split screen layout. Left side: Form. Right side: The `auth_background` image with a black/40 overlay."
+  ]
+}
