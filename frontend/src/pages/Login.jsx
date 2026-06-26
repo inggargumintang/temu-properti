@@ -37,7 +37,7 @@ export default function Login() {
         <div className="w-full max-w-sm">
           <div className="flex items-center gap-2 mb-10">
             <span className="brand-dot" />
-            <span className="font-bold tracking-tight text-[15px]" style={{fontFamily:'Manrope'}}>SPEEDHOME</span>
+            <span className="font-bold tracking-tight text-[15px]" style={{fontFamily:'Manrope'}}>TEMU PROPERTI</span>
             <span className="text-[11px] text-slate-500 ml-1 tracking-wide uppercase font-semibold">Market Intelligence</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 mb-2">{t.auth.welcome}</h1>

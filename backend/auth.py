@@ -1,4 +1,4 @@
-"""JWT-based custom authentication for SPEEDHOME Market Intelligence."""
+"""JWT-based custom authentication for Temu Properti Market Intelligence."""
 import os
 import jwt
 import bcrypt

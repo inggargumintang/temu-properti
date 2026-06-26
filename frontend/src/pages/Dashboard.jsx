@@ -56,7 +56,7 @@ export default function Dashboard() {
       const url = URL.createObjectURL(res.data);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `SPEEDHOME_${data.area.replace(/\s+/g, "_")}_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.${fmt}`;
+      a.download = `TemuProperti_${data.area.replace(/\s+/g, "_")}_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.${fmt}`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success(`Exported ${fmt.toUpperCase()}`);

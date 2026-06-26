@@ -12,7 +12,7 @@ def export_xlsx(area: str, overall: dict, by_type: list, listings: list, insight
     # Summary sheet
     ws1 = wb.active
     ws1.title = "Summary"
-    ws1["A1"] = f"SPEEDHOME Market Analysis — {area}"
+    ws1["A1"] = f"Temu Properti — Market Analysis · {area}"
     ws1["A1"].font = Font(bold=True, size=14)
     ws1["A2"] = f"Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"
     ws1["A4"] = "Metric"

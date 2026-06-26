@@ -1,0 +1,24 @@
+{
+  "summary": "Verified rebrand from SPEEDHOME to Temu Properti across backend and frontend. Backend /api/ service name updated, all auth and key pages tested with admin login — no 401 regression. All UI pages (Login, Register, Dashboard, Search, Saved, Compare, ROI, Exports, Settings) show 'TEMU PROPERTI' sidebar/header. New export filename uses 'TemuProperti_' prefix (verified via curl Content-Disposition and live UI history). Old 'SPEEDHOME_*' filenames in Export History are pre-rename historical DB records — not a brand regression.",
+  "tested_scope": ["frontend", "backend", "auth", "integration"],
+  "passed": [
+    "GET /api/ returns {service: 'Temu Properti — Market Intelligence'}",
+    "POST /api/auth/login admin@speedhome.com / Admin@12345 → 200",
+    "GET /api/auth/me → 200 (admin profile)",
+    "GET /api/export/xlsx?area=Mont%20Kiara → 200 with Content-Disposition filename='TemuProperti_Mont_Kiara_20260626.xlsx'",
+    "Login page UI shows 'TEMU PROPERTI'; no 'SPEEDHOME' in HTML",
+    "Register page UI shows 'TEMU PROPERTI'; no 'SPEEDHOME' in HTML",
+    "Sidebar on Dashboard / Search / Saved / Compare / ROI / Exports / Settings all render 'TEMU PROPERTI'",
+    "No 401/Unauthorized errors on any authenticated page after login",
+    "Newest export history row shows 'TemuProperti_Mont_Kiara_20260626.xlsx' (new prefix in effect)"
+  ],
+  "failed": [],
+  "notes": [
+    "Export History page also lists older SPEEDHOME_*.xlsx/.csv records — these are pre-existing DB rows from before the rename, not produced by current code. Acceptable.",
+    "User email admin@speedhome.com remains unchanged by design (per request)."
+  ],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}

@@ -1,7 +1,7 @@
 // Bilingual i18n (EN / ID)
 export const translations = {
   en: {
-    appName: "SPEEDHOME Market Intelligence",
+    appName: "Temu Properti — Market Intelligence",
     tagline: "Malaysian Rental Market Analytics",
     nav: {
       dashboard: "Dashboard",
@@ -113,7 +113,7 @@ export const translations = {
     },
   },
   id: {
-    appName: "SPEEDHOME Market Intelligence",
+    appName: "Temu Properti — Market Intelligence",
     tagline: "Analisis Pasar Sewa Properti Malaysia",
     nav: {
       dashboard: "Dasbor",

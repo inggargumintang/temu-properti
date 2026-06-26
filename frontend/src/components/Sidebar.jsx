@@ -31,7 +31,7 @@ export const Sidebar = () => {
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-2">
           <span className="brand-dot" />
-          <span className="font-bold tracking-tight text-[15px] text-slate-900" style={{fontFamily: 'Manrope'}}>SPEEDHOME</span>
+          <span className="font-bold tracking-tight text-[15px] text-slate-900" style={{fontFamily: 'Manrope'}}>TEMU PROPERTI</span>
         </div>
         <div className="text-[11px] text-slate-500 mt-1 tracking-wide uppercase font-semibold">Market Intelligence</div>
       </div>

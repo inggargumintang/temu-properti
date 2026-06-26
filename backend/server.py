@@ -1,4 +1,4 @@
-"""SPEEDHOME Rental Market Intelligence — FastAPI Backend."""
+"""Temu Properti Rental Market Intelligence — FastAPI Backend."""
 from dotenv import load_dotenv
 from pathlib import Path
 ROOT_DIR = Path(__file__).parent
@@ -38,7 +38,7 @@ mongo_url = os.environ["MONGO_URL"]
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ["DB_NAME"]]
 
-app = FastAPI(title="SPEEDHOME Market Intelligence")
+app = FastAPI(title="Temu Properti — Market Intelligence")
 api_router = APIRouter(prefix="/api")
 
 
@@ -332,7 +332,7 @@ async def export(fmt: str, area: str, request: Request):
 
     safe_area = matched.replace(" ", "_")
     date_str = datetime.now(timezone.utc).strftime("%Y%m%d")
-    filename = f"SPEEDHOME_{safe_area}_{date_str}.{fmt}"
+    filename = f"TemuProperti_{safe_area}_{date_str}.{fmt}"
 
     if fmt == "xlsx":
         data = export_xlsx(matched, overall, by_type, listings, rule_insights, furnishing)
@@ -374,7 +374,7 @@ async def export_history(request: Request):
 
 @api_router.get("/")
 async def root():
-    return {"service": "SPEEDHOME Market Intelligence", "status": "ok"}
+    return {"service": "Temu Properti — Market Intelligence", "status": "ok"}
 
 
 # Register router
