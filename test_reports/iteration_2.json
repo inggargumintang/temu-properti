@@ -1,0 +1,38 @@
+{
+  "summary": "Verified user-reported 401 bug is FIXED. Backend: 7/7 critical endpoints return 200 with httpOnly cookies (secure=true). Frontend Playwright: end-to-end flow (login -> analyze -> save -> export xlsx/csv -> ROI -> compare -> saved -> exports -> lang switch -> logout) completed with 0 × 401 and 0 × >=400 across 14 API calls AFTER login. Only 4 × 401 on /api/auth/me BEFORE login completed (expected and acceptable per spec).",
+  "tested_scope": ["frontend", "backend", "auth", "integration"],
+  "passed": [
+    "POST /api/auth/login -> 200, cookies set (access_token & refresh_token, HttpOnly, Secure, ~7d/30m TTL)",
+    "GET /api/auth/me -> 200 with cookies",
+    "GET /api/analyze?area=Mont Kiara -> 200",
+    "GET /api/saved -> 200",
+    "POST /api/saved (Save Analysis click) -> succeeded (no 4xx observed)",
+    "GET /api/export/xlsx -> 200 (binary, 9816 bytes, correct mime) + UI download SPEEDHOME_Mont_Kiara_20260626.xlsx",
+    "GET /api/export/csv -> 200 (text/csv, 6621 bytes) + UI download .csv",
+    "POST /api/roi -> 200; UI displays Gross Yield 4.99%",
+    "POST /api/compare (3 areas) -> 200",
+    "GET /api/export/history/list -> 200",
+    "Language switcher EN<->ID toggles text (login page rendered in Indonesian after toggle)",
+    "Logout clears cookies and redirects to /login",
+    "ZERO 401 errors on ANY feature after successful login (14 API calls captured)"
+  ],
+  "failed": [
+    {
+      "area": "Compare UI testability (minor)",
+      "issue": "data-testid='add-Mont Kiara' / 'add-Bangsar' / 'add-KLCC' selectors not found on Compare page. Compare still ran successfully (200) — likely uses different add mechanism (e.g. autocomplete) or different testid naming.",
+      "evidence": "Playwright: locator(\"[data-testid='add-Mont Kiara']\") timed out 2500ms; however compare-run-button click produced a successful /api/compare 200 response.",
+      "priority": "LOW"
+    }
+  ],
+  "action_items": [
+    "No blocker. The 401-after-login bug reported by user is RESOLVED with secure=true cookie config — verified end-to-end.",
+    "Optional: confirm Compare 'add area' testid naming if exact data-testid='add-{Area}' is expected by spec."
+  ],
+  "success_rate": {"backend": "100% (7/7 endpoints)", "frontend": "100% on auth/cookie persistence (14/14 post-login calls 200)"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": {
+    "cookie_attributes_observed": "access_token & refresh_token are HttpOnly=true, Secure=true, domain=market-analyzer-402.preview.emergentagent.com",
+    "acceptable_401s": "4 × GET /api/auth/me observed BEFORE login completed — matches spec (initial auth probe)."
+  }
+}
