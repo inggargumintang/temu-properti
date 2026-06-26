@@ -57,7 +57,7 @@ def compute_by_unit_type(listings: List[Dict]) -> List[Dict]:
     groups: Dict[str, List[Dict]] = {}
     for li in listings:
         key = li.get("bedroom_type", "Unknown")
-        groups.setdefault(key, []).append(l)
+        groups.setdefault(key, []).append(li)
     out = []
     order_map = {"Studio": 0, "1BR": 1, "2BR": 2, "3BR": 3, "4BR": 4}
     for unit_type, items in groups.items():

@@ -85,7 +85,7 @@ def export_xlsx(area: str, overall: dict, by_type: list, listings: list, insight
         c = ws4.cell(row=1, column=col, value=h)
         c.font = Font(bold=True, color="FFFFFF")
         c.fill = PatternFill("solid", fgColor="002FA7")
-    for i, l in enumerate(listings, start=2):
+    for i, li in enumerate(listings, start=2):
         ws4.cell(row=i, column=1, value=li.get("title"))
         ws4.cell(row=i, column=2, value=li.get("property_name"))
         ws4.cell(row=i, column=3, value=li.get("area_name"))
