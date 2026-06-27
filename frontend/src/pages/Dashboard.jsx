@@ -137,12 +137,12 @@ export default function Dashboard() {
 
             {/* KPI Grid */}
             <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" data-testid="kpi-grid">
-              <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall.listing_count} />
-              <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall.average_price)} />
-              <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall.median_price)} />
-              <KpiCard testId="kpi-fair-price" label={t.kpi.fairPrice} value={fmtRM(data.overall.fair_price)} />
-              <KpiCard testId="kpi-psf" label={t.kpi.psf} value={`RM ${data.overall.rent_per_sqft.toFixed(2)}`} />
-              <KpiCard testId="kpi-avg-size" label={t.kpi.avgSize} value={`${data.overall.average_size.toFixed(0)} sqft`} />
+              <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall?.listing_count} />
+              <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall?.average_price)} />
+              <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall?.median_price)} />
+              <KpiCard testId="kpi-fair-price" label={t.kpi.fairPrice} value={fmtRM(data.overall?.fair_price)} />
+              <KpiCard testId="kpi-psf" label={t.kpi.psf} value={`RM ${data.overall?.rent_per_sqft.toFixed(2)}`} />
+              <KpiCard testId="kpi-avg-size" label={t.kpi.avgSize} value={`${data.overall?.average_size.toFixed(0)} sqft`} />
             </div>
 
             {/* Insights */}
