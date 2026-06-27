@@ -209,7 +209,7 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={260}>
                   <PieChart>
                     <Pie data={data.furnishing_distribution} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label={(e) => `${e.percentage}%`}>
-                      {data.furnishing_distribution.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                      {data.furnishing_distribution?.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                     </Pie>
                     <Tooltip />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
