@@ -66,7 +66,7 @@ export default function Compare() {
             ))}
           </div>
           <div className="flex gap-2 flex-wrap mb-4">
-            {allAreas.filter(a => !selected.includes(a)).slice(0, 15).map(a => (
+            {allAreas?.filter(a => !selected.includes(a)).slice(0, 15).map(a => (
               <button key={a} onClick={() => addArea(a)} className="text-xs px-3 py-1.5 border border-slate-200 hover:border-[#002FA7] hover:text-[#002FA7] rounded-sm transition" data-testid={`add-${a}`}>
                 <Plus size={10} weight="bold" className="inline mr-1" /> {a}
               </button>
