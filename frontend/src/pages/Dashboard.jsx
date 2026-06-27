@@ -154,7 +154,7 @@ export default function Dashboard() {
                     <h3 className="text-sm font-bold tracking-wide uppercase text-[#002FA7]">{t.insights.title} · {t.insights.ai}</h3>
                   </div>
                   <ul className="space-y-2">
-                    {data.ai_insights.map((ins, i) => (
+                    {data.ai_insights?.map((ins, i) => (
                       <li key={i} className="flex gap-2 text-sm text-slate-700 leading-relaxed">
                         <ArrowRight size={14} weight="bold" className="text-[#002FA7] mt-1 flex-shrink-0" />
                         <span>{ins}</span>
