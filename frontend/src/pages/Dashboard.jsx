@@ -169,7 +169,7 @@ export default function Dashboard() {
                   <h3 className="text-sm font-bold tracking-wide uppercase text-slate-700">{t.insights.title} · {t.insights.rule}</h3>
                 </div>
                 <ul className="space-y-2">
-                  {data.rule_insights.map((ins, i) => (
+                  {data.rule_insights?.map((ins, i) => (
                     <li key={i} className="flex gap-2 text-sm text-slate-700 leading-relaxed">
                       <span className="brand-dot mt-1.5 flex-shrink-0" />
                       <span>{ins}</span>
