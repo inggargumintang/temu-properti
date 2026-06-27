@@ -250,7 +250,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.by_unit_type.map(r => (
+                    {data.by_unit_type?.map(r => (
                       <tr key={r.unit_type} className="border-t border-slate-100">
                         <td className="font-semibold">{r.unit_type}</td>
                         <td className="text-right">{r.listing_count}</td>
@@ -292,7 +292,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {pageItems.map((l, i) => (
+                    {pageItems?.map((l, i) => (
                       <tr key={l.source_listing_id + i} className="border-t border-slate-100" data-testid={`listing-row-${i}`}>
                         <td className="max-w-[280px] truncate" title={l.title}>{l.title}</td>
                         <td>{l.property_name}</td>
