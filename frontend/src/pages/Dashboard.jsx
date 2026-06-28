@@ -88,7 +88,7 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
+      <div className="p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.nav.dashboard}</h1>
@@ -278,7 +278,7 @@ export default function Dashboard() {
                   <option>Unfurnished</option>
                 </select>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto hidden sm:block">
                 <table className="dense w-full text-sm">
                   <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-600">
                     <tr>
@@ -310,6 +310,24 @@ export default function Dashboard() {
                   </tbody>
                 </table>
               </div>
+              {/* Mobile card list */}
+              <div className="sm:hidden divide-y divide-slate-100">
+                {pageItems.map((l, i) => (
+                  <a key={l.source_listing_id + i} href={l.listing_url} target="_blank" rel="noreferrer" className="block p-4 active:bg-slate-50" data-testid={`listing-card-${i}`}>
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <span className="text-[10px] font-bold tracking-wide uppercase text-[#002FA7] bg-[#F0F4FF] px-1.5 py-0.5 rounded-sm">{l.bedroom_type}</span>
+                      <span className="text-base font-extrabold text-slate-900 tabular-nums">{fmtRM(l.monthly_rent)}</span>
+                    </div>
+                    <div className="text-sm font-semibold text-slate-900 leading-snug mb-1 line-clamp-2">{l.property_name}</div>
+                    <div className="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+                      <span>{l.size_sqft} sqft</span>
+                      <span>·</span>
+                      <span>{l.furnishing_status}</span>
+                      <ArrowSquareOut size={12} className="ml-auto text-[#002FA7]" />
+                    </div>
+                  </a>
+                ))}
+              </div>
               <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
                 <span>Page {page} of {totalPages}</span>
                 <div className="flex gap-2">
@@ -321,6 +339,20 @@ export default function Dashboard() {
           </>
         )}
       </div>
+      {/* Sticky mobile action bar (only when data loaded) */}
+      {data && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-3 py-2 flex gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]" data-testid="mobile-action-bar">
+          <Button onClick={doSave} variant="outline" className="flex-1 rounded-sm h-10 text-xs" data-testid="mobile-save-button">
+            <FloppyDisk size={14} weight="duotone" className="mr-1" /> {t.common.save}
+          </Button>
+          <Button onClick={() => doExport("csv")} variant="outline" className="flex-1 rounded-sm h-10 text-xs" data-testid="mobile-export-csv">
+            <DownloadSimple size={14} weight="duotone" className="mr-1" /> CSV
+          </Button>
+          <Button onClick={() => doExport("xlsx")} className="flex-1 bg-[#002FA7] hover:bg-[#00227A] rounded-sm h-10 text-xs" data-testid="mobile-export-xlsx">
+            <DownloadSimple size={14} weight="duotone" className="mr-1" /> XLSX
+          </Button>
+        </div>
+      )}
     </Layout>
   );
 }

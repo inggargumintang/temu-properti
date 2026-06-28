@@ -1,0 +1,17 @@
+{
+  "short_name": "Temu Properti",
+  "name": "Temu Properti — Market Intelligence",
+  "description": "Malaysian rental market analytics — fair price, ROI, area comparison",
+  "icons": [
+    { "src": "favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any maskable" },
+    { "src": "logo.svg", "type": "image/svg+xml", "sizes": "512x512", "purpose": "any" }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#002FA7",
+  "background_color": "#F8F9FA",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["business", "finance", "productivity"]
+}
