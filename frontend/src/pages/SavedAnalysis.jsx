@@ -34,8 +34,8 @@ export default function SavedAnalysis() {
 
   return (
     <Layout>
-      <div className="p-6 sm:p-8 max-w-[1400px] mx-auto" data-testid="saved-page">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{t.nav.saved}</h1>
+      <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto" data-testid="saved-page">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.nav.saved}</h1>
         <p className="text-sm text-slate-600 mt-1 mb-6">Your bookmarked area analyses.</p>
 
         {loading && <div className="text-sm text-slate-500">Loading...</div>}

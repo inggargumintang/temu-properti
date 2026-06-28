@@ -14,8 +14,8 @@ export default function ExportHistory() {
 
   return (
     <Layout>
-      <div className="p-6 sm:p-8 max-w-[1200px] mx-auto" data-testid="exports-page">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{t.nav.exports}</h1>
+      <div className="p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto" data-testid="exports-page">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.nav.exports}</h1>
         <p className="text-sm text-slate-600 mt-1 mb-6">Your recent export activity.</p>
 
         {items.length === 0 ? (

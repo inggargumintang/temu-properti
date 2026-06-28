@@ -16,9 +16,9 @@ import { Button } from "../components/ui/button";
 const PIE_COLORS = ["#002FA7", "#3B82F6", "#93C5FD", "#E0E7FF"];
 
 const KpiCard = ({ label, value, sub, testId }) => (
-  <div className="kpi-card bg-white border border-slate-200 rounded-sm p-5" data-testid={testId}>
-    <div className="text-[11px] tracking-[0.05em] uppercase text-slate-500 font-bold mb-2">{label}</div>
-    <div className="text-2xl sm:text-3xl font-extrabold tracking-tighter text-slate-900 tabular-nums">{value}</div>
+  <div className="kpi-card bg-white border border-slate-200 rounded-sm p-4 sm:p-5" data-testid={testId}>
+    <div className="text-[10px] sm:text-[11px] tracking-[0.05em] uppercase text-slate-500 font-bold mb-1.5 sm:mb-2">{label}</div>
+    <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tighter text-slate-900 tabular-nums">{value}</div>
     {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
   </div>
 );
@@ -37,13 +37,28 @@ export default function Dashboard() {
   const handleAnalyze = async (area) => {
     setBusy(true);
     setData(null);
+    const cacheKey = `tp_analysis:${area.toLowerCase().trim()}`;
     try {
       const { data } = await api.get(`/analyze`, { params: { area, lang } });
       setData(data);
       setPage(1);
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+      } catch (_e) { /* quota */ }
       toast.success(`${data.area} — ${data.listings.length} listings analyzed`);
     } catch (e) {
-      toast.error(e.response?.data?.detail || "Failed to analyze");
+      // Try offline cache
+      try {
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setData({ ...parsed.data, offline: true, cached_at: parsed.ts });
+          setPage(1);
+          toast.warning(`Offline — showing cached analysis from ${new Date(parsed.ts).toLocaleString()}`);
+          return;
+        }
+      } catch (_e) { /* ignore */ }
+      toast.error(e.response?.data?.detail || "Failed to analyze (and no offline cache available)");
     } finally {
       setBusy(false);
     }
@@ -88,10 +103,10 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="p-6 sm:p-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
+      <div className="p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{t.nav.dashboard}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.nav.dashboard}</h1>
           <p className="text-sm text-slate-600 mt-1">{t.tagline}</p>
         </div>
 
@@ -121,6 +136,7 @@ export default function Dashboard() {
                   {data.data_source === "live" ? t.common.liveData : t.common.mockData}
                 </span>
                 {data.from_cache && <span className="text-[10px] uppercase font-bold text-slate-500">{t.common.fromCache}</span>}
+                {data.offline && <span className="text-[10px] tracking-wide uppercase font-bold px-2 py-1 rounded-sm bg-orange-50 text-orange-700" data-testid="offline-badge">Offline · cached locally</span>}
               </div>
               <div className="flex gap-2">
                 <Button onClick={doSave} variant="outline" className="rounded-sm h-9 text-xs" data-testid="save-analysis-button">
@@ -136,7 +152,7 @@ export default function Dashboard() {
             </div>
 
             {/* KPI Grid */}
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" data-testid="kpi-grid">
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4" data-testid="kpi-grid">
               <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall?.listing_count} />
               <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall?.average_price)} />
               <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall?.median_price)} />
@@ -278,7 +294,7 @@ export default function Dashboard() {
                   <option>Unfurnished</option>
                 </select>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto hidden sm:block">
                 <table className="dense w-full text-sm">
                   <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-600">
                     <tr>
@@ -310,6 +326,24 @@ export default function Dashboard() {
                   </tbody>
                 </table>
               </div>
+              {/* Mobile card list */}
+              <div className="sm:hidden divide-y divide-slate-100">
+                {pageItems.map((l, i) => (
+                  <a key={l.source_listing_id + i} href={l.listing_url} target="_blank" rel="noreferrer" className="block p-4 active:bg-slate-50" data-testid={`listing-card-${i}`}>
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <span className="text-[10px] font-bold tracking-wide uppercase text-[#002FA7] bg-[#F0F4FF] px-1.5 py-0.5 rounded-sm">{l.bedroom_type}</span>
+                      <span className="text-base font-extrabold text-slate-900 tabular-nums">{fmtRM(l.monthly_rent)}</span>
+                    </div>
+                    <div className="text-sm font-semibold text-slate-900 leading-snug mb-1 line-clamp-2">{l.property_name}</div>
+                    <div className="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+                      <span>{l.size_sqft} sqft</span>
+                      <span>·</span>
+                      <span>{l.furnishing_status}</span>
+                      <ArrowSquareOut size={12} className="ml-auto text-[#002FA7]" />
+                    </div>
+                  </a>
+                ))}
+              </div>
               <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
                 <span>Page {page} of {totalPages}</span>
                 <div className="flex gap-2">
@@ -321,6 +355,20 @@ export default function Dashboard() {
           </>
         )}
       </div>
+      {/* Sticky mobile action bar (only when data loaded) */}
+      {data && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-3 py-2 flex gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]" data-testid="mobile-action-bar">
+          <Button onClick={doSave} variant="outline" className="flex-1 rounded-sm h-10 text-xs" data-testid="mobile-save-button">
+            <FloppyDisk size={14} weight="duotone" className="mr-1" /> {t.common.save}
+          </Button>
+          <Button onClick={() => doExport("csv")} variant="outline" className="flex-1 rounded-sm h-10 text-xs" data-testid="mobile-export-csv">
+            <DownloadSimple size={14} weight="duotone" className="mr-1" /> CSV
+          </Button>
+          <Button onClick={() => doExport("xlsx")} className="flex-1 bg-[#002FA7] hover:bg-[#00227A] rounded-sm h-10 text-xs" data-testid="mobile-export-xlsx">
+            <DownloadSimple size={14} weight="duotone" className="mr-1" /> XLSX
+          </Button>
+        </div>
+      )}
     </Layout>
   );
 }
