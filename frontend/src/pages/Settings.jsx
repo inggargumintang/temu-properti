@@ -8,8 +8,8 @@ export default function Settings() {
   const { user } = useAuth();
   return (
     <Layout>
-      <div className="p-6 sm:p-8 max-w-[900px] mx-auto" data-testid="settings-page">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{t.settings.title}</h1>
+      <div className="p-4 sm:p-6 lg:p-8 max-w-[900px] mx-auto" data-testid="settings-page">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.settings.title}</h1>
         <p className="text-sm text-slate-600 mt-1 mb-6">Manage your preferences and account.</p>
 
         <div className="space-y-4">
