@@ -58,6 +58,7 @@ async def get_current_user(request: Request, db) -> dict:
     print("Origin:", request.headers.get("origin"))
     print("Referer:", request.headers.get("referer"))
     print("==========")
+    print("==========")
 
     
     token = request.cookies.get("access_token")
