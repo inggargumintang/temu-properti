@@ -4,6 +4,9 @@ import re
 import logging
 from typing import List, Dict, Optional
 from datetime import datetime, timezone
+import json
+from pathlib import Path
+import anyio  # atau asyncio
 
 import httpx
 from bs4 import BeautifulSoup
@@ -101,7 +104,6 @@ def pick_bedroom() -> tuple:
             return label, count
     return "2BR", 2
 
-
 def generate_mock_listings(area: str, count: int = 40) -> List[Dict]:
     """Generate realistic mock listings for an area."""
     baseline = AREA_BASELINES.get(area, {"base": 2000, "variance": 800, "per_sqft": 2.2})
@@ -147,21 +149,28 @@ def generate_mock_listings(area: str, count: int = 40) -> List[Dict]:
 
 
 async def try_scrape_speedhome(area: str) -> Optional[List[Dict]]:
-    """Attempt to scrape SPEEDHOME public listing page. Returns None on failure."""
+    """Attempt to scrape SPEEDHOME. Returns None on ANY failure."""
     try:
         url = f"https://speedhome.com/rent/{area.lower().replace(' ', '-')}"
         headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
             "Accept-Language": "en-US,en;q=0.9",
         }
-        async with httpx.AsyncClient(timeout=8.0, follow_redirects=True) as cli:
+        # Tambah connect timeout terpisah, lebih pendek untuk Railway
+        async with httpx.AsyncClient(
+            timeout=httpx.Timeout(connect=4.0, read=8.0, write=4.0, pool=4.0),
+            follow_redirects=True,
+        ) as cli:
             r = await cli.get(url, headers=headers)
+
         if r.status_code != 200 or len(r.text) < 1000:
             return None
+
         soup = BeautifulSoup(r.text, "lxml")
         cards = soup.select("[data-listing-id], .listing-card, .property-card")
         if not cards:
             return None
+
         listings = []
         for c in cards[:60]:
             txt = c.get_text(" ", strip=True)
@@ -189,16 +198,52 @@ async def try_scrape_speedhome(area: str) -> Optional[List[Dict]]:
                 "collected_at": datetime.now(timezone.utc).isoformat(),
             })
         return listings if len(listings) >= 5 else None
-    except Exception as e:
-        logger.info(f"Live scrape failed: {e}")
+
+    except (
+        httpx.ConnectError,
+        httpx.ConnectTimeout,
+        httpx.ReadTimeout,
+        httpx.RemoteProtocolError,
+        httpx.HTTPStatusError,
+        OSError,                    # Railway-level network block
+        Exception,                  # Fallback untuk error lain
+    ) as e:
+        logger.info(f"Live scrape failed ({type(e).__name__}): {e}")
         return None
 
 
+# Path ke static data yang di-bundle saat deploy
+_STATIC_DATA_PATH = Path(__file__).parent / "static_data" / "listings.json"
+_static_cache: dict | None = None
+
+def _load_static_data() -> dict:
+    global _static_cache
+    if _static_cache is None:
+        if _STATIC_DATA_PATH.exists():
+            _static_cache = json.loads(_STATIC_DATA_PATH.read_text())
+        else:
+            _static_cache = {}
+    return _static_cache
+
 async def collect_listings(area: str) -> Dict:
-    """Main entry: try live scrape, fallback to mock."""
-    matched = find_area_match(area) or area.title()
+    """Main entry: try live scrape → static bundle → mock."""
+    matched = find_area_match(area) or area.strip().title()
+
+    # 1. Coba live scrape
     live = await try_scrape_speedhome(matched)
     if live and len(live) >= 5:
         return {"area": matched, "listings": live, "source": "live"}
+
+    # 2. Fallback ke static data (pre-fetched dari laptop)
+    static = _load_static_data()
+    if matched in static:
+        logger.info(f"Using static bundle data for {matched}")
+        return {
+            "area": matched,
+            "listings": static[matched]["listings"],
+            "source": "static",   # bisa dibedakan dari "live" atau "mock"
+        }
+
+    # 3. Last resort: mock
     listings = generate_mock_listings(matched, count=random.randint(35, 55))
     return {"area": matched, "listings": listings, "source": "mock"}

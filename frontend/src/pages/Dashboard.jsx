@@ -153,12 +153,12 @@ export default function Dashboard() {
 
             {/* KPI Grid */}
             <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4" data-testid="kpi-grid">
-              <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall.listing_count} />
-              <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall.average_price)} />
-              <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall.median_price)} />
-              <KpiCard testId="kpi-fair-price" label={t.kpi.fairPrice} value={fmtRM(data.overall.fair_price)} />
-              <KpiCard testId="kpi-psf" label={t.kpi.psf} value={`RM ${data.overall.rent_per_sqft.toFixed(2)}`} />
-              <KpiCard testId="kpi-avg-size" label={t.kpi.avgSize} value={`${data.overall.average_size.toFixed(0)} sqft`} />
+              <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall?.listing_count} />
+              <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall?.average_price)} />
+              <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall?.median_price)} />
+              <KpiCard testId="kpi-fair-price" label={t.kpi.fairPrice} value={fmtRM(data.overall?.fair_price)} />
+              <KpiCard testId="kpi-psf" label={t.kpi.psf} value={`RM ${data.overall?.rent_per_sqft.toFixed(2)}`} />
+              <KpiCard testId="kpi-avg-size" label={t.kpi.avgSize} value={`${data.overall?.average_size.toFixed(0)} sqft`} />
             </div>
 
             {/* Insights */}
@@ -170,7 +170,7 @@ export default function Dashboard() {
                     <h3 className="text-sm font-bold tracking-wide uppercase text-[#002FA7]">{t.insights.title} · {t.insights.ai}</h3>
                   </div>
                   <ul className="space-y-2">
-                    {data.ai_insights.map((ins, i) => (
+                    {data.ai_insights?.map((ins, i) => (
                       <li key={i} className="flex gap-2 text-sm text-slate-700 leading-relaxed">
                         <ArrowRight size={14} weight="bold" className="text-[#002FA7] mt-1 flex-shrink-0" />
                         <span>{ins}</span>
@@ -185,7 +185,7 @@ export default function Dashboard() {
                   <h3 className="text-sm font-bold tracking-wide uppercase text-slate-700">{t.insights.title} · {t.insights.rule}</h3>
                 </div>
                 <ul className="space-y-2">
-                  {data.rule_insights.map((ins, i) => (
+                  {data.rule_insights?.map((ins, i) => (
                     <li key={i} className="flex gap-2 text-sm text-slate-700 leading-relaxed">
                       <span className="brand-dot mt-1.5 flex-shrink-0" />
                       <span>{ins}</span>
@@ -225,7 +225,7 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={260}>
                   <PieChart>
                     <Pie data={data.furnishing_distribution} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label={(e) => `${e.percentage}%`}>
-                      {data.furnishing_distribution.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                      {data.furnishing_distribution?.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                     </Pie>
                     <Tooltip />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
@@ -266,7 +266,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.by_unit_type.map(r => (
+                    {data.by_unit_type?.map(r => (
                       <tr key={r.unit_type} className="border-t border-slate-100">
                         <td className="font-semibold">{r.unit_type}</td>
                         <td className="text-right">{r.listing_count}</td>
@@ -308,7 +308,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {pageItems.map((l, i) => (
+                    {pageItems?.map((l, i) => (
                       <tr key={l.source_listing_id + i} className="border-t border-slate-100" data-testid={`listing-row-${i}`}>
                         <td className="max-w-[280px] truncate" title={l.title}>{l.title}</td>
                         <td>{l.property_name}</td>
