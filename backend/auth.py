@@ -53,6 +53,13 @@ def clear_auth_cookies(response: Response):
 
 
 async def get_current_user(request: Request, db) -> dict:
+    print("==========")
+    print("Cookies:", request.cookies)
+    print("Origin:", request.headers.get("origin"))
+    print("Referer:", request.headers.get("referer"))
+    print("==========")
+
+    
     token = request.cookies.get("access_token")
     if not token:
         auth_header = request.headers.get("Authorization", "")
