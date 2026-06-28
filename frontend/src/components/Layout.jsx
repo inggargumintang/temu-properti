@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "../components/ui/sonner";
-import { List, X } from "@phosphor-icons/react";
+import { List, X, WifiSlash } from "@phosphor-icons/react";
 
 export const Layout = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    const u = () => setOnline(navigator.onLine);
+    window.addEventListener("online", u);
+    window.addEventListener("offline", u);
+    return () => { window.removeEventListener("online", u); window.removeEventListener("offline", u); };
+  }, []);
   const close = () => setMobileOpen(false);
 
   return (
@@ -45,6 +52,13 @@ export const Layout = ({ children }) => {
       )}
 
       <main className="flex-1 min-w-0 overflow-x-hidden pt-14 lg:pt-0">
+        {!online && (
+          <div className="bg-orange-50 border-b border-orange-200 text-orange-800 text-xs px-4 py-2 flex items-center gap-2" data-testid="offline-banner">
+            <WifiSlash size={14} weight="bold" />
+            <span className="font-semibold">You are offline.</span>
+            <span>Showing cached data only.</span>
+          </div>
+        )}
         {children}
       </main>
       <Toaster position="top-right" richColors />

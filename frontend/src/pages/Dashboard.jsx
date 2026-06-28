@@ -37,13 +37,28 @@ export default function Dashboard() {
   const handleAnalyze = async (area) => {
     setBusy(true);
     setData(null);
+    const cacheKey = `tp_analysis:${area.toLowerCase().trim()}`;
     try {
       const { data } = await api.get(`/analyze`, { params: { area, lang } });
       setData(data);
       setPage(1);
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+      } catch (_e) { /* quota */ }
       toast.success(`${data.area} — ${data.listings.length} listings analyzed`);
     } catch (e) {
-      toast.error(e.response?.data?.detail || "Failed to analyze");
+      // Try offline cache
+      try {
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setData({ ...parsed.data, offline: true, cached_at: parsed.ts });
+          setPage(1);
+          toast.warning(`Offline — showing cached analysis from ${new Date(parsed.ts).toLocaleString()}`);
+          return;
+        }
+      } catch (_e) { /* ignore */ }
+      toast.error(e.response?.data?.detail || "Failed to analyze (and no offline cache available)");
     } finally {
       setBusy(false);
     }
@@ -121,6 +136,7 @@ export default function Dashboard() {
                   {data.data_source === "live" ? t.common.liveData : t.common.mockData}
                 </span>
                 {data.from_cache && <span className="text-[10px] uppercase font-bold text-slate-500">{t.common.fromCache}</span>}
+                {data.offline && <span className="text-[10px] tracking-wide uppercase font-bold px-2 py-1 rounded-sm bg-orange-50 text-orange-700" data-testid="offline-badge">Offline · cached locally</span>}
               </div>
               <div className="flex gap-2">
                 <Button onClick={doSave} variant="outline" className="rounded-sm h-9 text-xs" data-testid="save-analysis-button">
