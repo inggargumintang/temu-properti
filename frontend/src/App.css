@@ -31,3 +31,9 @@
 
 table.dense th, table.dense td { padding: 8px 12px; }
 table.dense tr:hover td { background: #F8F9FA; }
+
+/* Mobile responsive helpers */
+@media (max-width: 640px) {
+  table.dense th, table.dense td { padding: 6px 8px; font-size: 12px; }
+  .recharts-cartesian-axis-tick-value { font-size: 9px !important; }
+}

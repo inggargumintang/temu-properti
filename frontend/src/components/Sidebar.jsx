@@ -6,7 +6,7 @@ import {
   DownloadSimple, Gear, SignOut, Translate
 } from "@phosphor-icons/react";
 
-export const Sidebar = () => {
+export const Sidebar = ({ onNavigate }) => {
   const { user, logout } = useAuth();
   const { lang, setLang, t } = useLang();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col min-h-screen sticky top-0" data-testid="sidebar">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col min-h-screen lg:sticky lg:top-0" data-testid="sidebar">
       <div className="px-5 py-5 border-b border-slate-200">
         <div className="flex items-center gap-2">
           <span className="brand-mark">
@@ -49,6 +49,7 @@ export const Sidebar = () => {
             to={it.to}
             end={it.to === "/"}
             data-testid={it.testId}
+            onClick={() => onNavigate && onNavigate()}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-200 ${
                 isActive

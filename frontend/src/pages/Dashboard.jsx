@@ -16,9 +16,9 @@ import { Button } from "../components/ui/button";
 const PIE_COLORS = ["#002FA7", "#3B82F6", "#93C5FD", "#E0E7FF"];
 
 const KpiCard = ({ label, value, sub, testId }) => (
-  <div className="kpi-card bg-white border border-slate-200 rounded-sm p-5" data-testid={testId}>
-    <div className="text-[11px] tracking-[0.05em] uppercase text-slate-500 font-bold mb-2">{label}</div>
-    <div className="text-2xl sm:text-3xl font-extrabold tracking-tighter text-slate-900 tabular-nums">{value}</div>
+  <div className="kpi-card bg-white border border-slate-200 rounded-sm p-4 sm:p-5" data-testid={testId}>
+    <div className="text-[10px] sm:text-[11px] tracking-[0.05em] uppercase text-slate-500 font-bold mb-1.5 sm:mb-2">{label}</div>
+    <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tighter text-slate-900 tabular-nums">{value}</div>
     {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
   </div>
 );
@@ -88,10 +88,10 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="p-6 sm:p-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto" data-testid="dashboard-page">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">{t.nav.dashboard}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">{t.nav.dashboard}</h1>
           <p className="text-sm text-slate-600 mt-1">{t.tagline}</p>
         </div>
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
             </div>
 
             {/* KPI Grid */}
-            <div className="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" data-testid="kpi-grid">
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4" data-testid="kpi-grid">
               <KpiCard testId="kpi-listings" label={t.kpi.listings} value={data.overall.listing_count} />
               <KpiCard testId="kpi-avg-price" label={t.kpi.avgPrice} value={fmtRM(data.overall.average_price)} />
               <KpiCard testId="kpi-median-price" label={t.kpi.medianPrice} value={fmtRM(data.overall.median_price)} />
