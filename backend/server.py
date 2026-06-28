@@ -85,7 +85,7 @@ async def register(body: RegisterIn, response: Response):
     access = create_access_token(uid, email)
     refresh = create_refresh_token(uid)
     set_auth_cookies(response, access, refresh)
-    return {"id": uid, "email": email, "name": doc["name"], "role": "user"}
+    return {"id": uid, "email": email, "name": doc["name"], "role": "user", "access_token": access, "refresh_token": refresh, "token_type": "Bearer"}
 
 
 @api_router.post("/auth/login")
@@ -103,7 +103,7 @@ async def login(body: LoginIn, request: Request, response: Response):
     access = create_access_token(uid, email)
     refresh = create_refresh_token(uid)
     set_auth_cookies(response, access, refresh)
-    return {"id": uid, "email": email, "name": user.get("name"), "role": user.get("role", "user")}
+    return {"id": uid, "email": email, "name": user.get("name"), "role": user.get("role", "user"), "access_token": access, "refresh_token": refresh, "token_type": "Bearer"}
 
 
 @api_router.post("/auth/logout")

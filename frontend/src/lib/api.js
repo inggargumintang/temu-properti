@@ -8,6 +8,19 @@ const api = axios.create({
   withCredentials: true,
 });
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor: on 401 (except /auth/me), broadcast a session-expired event
 // so the app can redirect to /login. /auth/me 401 is handled silently by AuthContext.
 api.interceptors.response.use(
